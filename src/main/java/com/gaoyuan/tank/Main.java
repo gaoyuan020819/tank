@@ -8,6 +8,8 @@ public class Main {
 
         TankFrame tf = new TankFrame();
 
+        tf.tanks.add(new Tank(100,100,Dir.LEFT,Group.BAD,tf));
+
         while (true){
             Thread.sleep(100);
             tf.repaint();

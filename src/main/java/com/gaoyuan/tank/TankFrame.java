@@ -6,16 +6,18 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class TankFrame extends Frame {
 
-    Tank myTank = new Tank(200, 200, Dir.LEFT, this);
-    List<Bullet> bList = new ArrayList<Bullet>();
+    List<Bullet> bullets = new ArrayList<Bullet>();
+    List<Tank> tanks = new ArrayList<Tank>();
+    Boom boom = new Boom(80,80,this);
 
-    private static final int GAME_WIDTH = 800;
-    private static final int GAME_HEIGHT = 800;
+    Tank myTank = new Tank(200,200,Dir.LEFT,Group.GOOD,this);
+
+    public static final int GAME_WIDTH = 800;
+    public static final int GAME_HEIGHT = 800;
 
     final int SPEED = 10;
 
@@ -58,24 +60,37 @@ public class TankFrame extends Frame {
     public void paint(Graphics g) {
         Color c = g.getColor();
         g.setColor(Color.WHITE);
-        g.drawString("子弹数量：" + bList.size(), 10, 60);
+        g.drawString("子弹数量：" + bullets.size(), 10, 60);
+        g.drawString("敌人的数量"+ tanks.size(),10,90);
         g.setColor(c);
+
+
+        for (int i = 0; i < bullets.size(); i++) {
+            bullets.get(i).paint(g);
+
+        }
+
+        for (int i = 0; i < tanks.size(); i++) {
+            tanks.get(i).piant(g);
+        }
 
         myTank.piant(g);
 
-        for (int i = 0; i < bList.size(); i++) {
-            Bullet b = bList.get(i);
-            b.paint(g);
-        }
+        for (int i = 0; i < bullets.size(); i++) {
+            for (int j = 0; j < tanks.size(); j++) {
 
-        Iterator<Bullet> bulletIterator = bList.iterator();
-        while (bulletIterator.hasNext()) {
-            Bullet b = bulletIterator.next();
-            b.paint(g);
-            if (b.vaild(GAME_WIDTH, GAME_HEIGHT)) {
-                bulletIterator.remove();
+                bullets.get(i).collideWith(tanks.get(j));
             }
         }
+
+        boom.paint(g);
+
+//        Iterator<Bullet> bulletIterator = bList.iterator();
+//        while (bulletIterator.hasNext()) {
+//            Bullet b = bulletIterator.next();
+//            b.paint(g);
+//
+//        }
 
 //        System.out.println("paint");
 //        g.fillRect(x, y, 50, 50);
