@@ -31,7 +31,7 @@ public class Boom {
         g.drawImage(ResourceMgr.boom[step++],x,y ,null);
 
         if (step>= ResourceMgr.boom.length){
-            step = 0;
+            tf.booms.remove(this);
         }
     }
 

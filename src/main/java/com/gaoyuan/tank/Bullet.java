@@ -4,13 +4,13 @@ import java.awt.*;
 
 public class Bullet {
 
-    private static final int SPEED = 10;
+    private static final int SPEED = 50;
 
     public static int WIDTH = ResourceMgr.bulletL.getWidth();
     public static int HEIGHT = ResourceMgr.bulletL.getWidth();
 
 
-    private int x,y;
+    private int x, y;
     private Dir dir;
     public Group group;
 
@@ -18,17 +18,24 @@ public class Bullet {
     private TankFrame tf = null;
     private boolean living = true;
 
-    public Bullet(int x, int y, Dir dir,Group group,TankFrame tf) {
+    Rectangle rect = new Rectangle();
+
+    public Bullet(int x, int y, Dir dir, Group group, TankFrame tf) {
         this.x = x;
         this.y = y;
         this.dir = dir;
         this.group = group;
         this.tf = tf;
+
+        rect.x = this.x;
+        rect.y = this.y;
+        rect.width = Bullet.WIDTH;
+        rect.height = Bullet.HEIGHT;
     }
 
-    public void paint(Graphics g){
+    public void paint(Graphics g) {
 
-        if (!living){
+        if (!living) {
             tf.bullets.remove(this);
         }
 
@@ -57,15 +64,20 @@ public class Bullet {
         move();
     }
 
-    private void vaild(int width,int height){
+    /**
+     * 子弹边界检测
+     */
+    private void boundsCheck() {
 
-        if (x<0 || x>width || y<0 || y>height){
+        if (x < 0 || x > TankFrame.GAME_WIDTH || y < 0 || y > TankFrame.GAME_HEIGHT) {
             this.living = false;
         }
 
     }
 
-
+    /**
+     * 子弹移动
+     */
     private void move() {
 
         x += dir == Dir.RIGHT ? SPEED : 0;
@@ -73,26 +85,36 @@ public class Bullet {
         y += dir == Dir.DOWN ? SPEED : 0;
         y -= dir == Dir.UP ? SPEED : 0;
 
-        vaild(TankFrame.GAME_WIDTH,TankFrame.GAME_HEIGHT);
+        boundsCheck();
 
+        rect.x = this.x;
+        rect.y = this.y;
     }
 
-    private void die(){
+    private void die() {
         this.living = false;
     }
 
-    public void collideWith(Tank tank){
+    /**
+     * 检测子弹是否击中坦克
+     *
+     * @param tank
+     */
+    public void collideWith(Tank tank) {
 
-        if (this.group == tank.group){
+        if (this.group == tank.group) {
             return;
         }
 
-        Rectangle rect1 = new Rectangle(this.x,this.y,WIDTH,HEIGHT);
-        Rectangle rect2 = new Rectangle(tank.x,tank.y,Tank.WIDTH,Tank.HEIGHT);
 
-        if (rect1.intersects(rect2)){
+        if (this.rect.intersects(tank.rect)) {
             tank.die();
             this.die();
+
+            int ex = tank.x + Tank.WIDTH / 2 - Boom.WIDTH / 2;
+            int ey = tank.y + Tank.HEIGHT / 2 - Boom.HEIGHT / 2;
+
+            tf.booms.add(new Boom(ex, ey, tf));
         }
     }
 }

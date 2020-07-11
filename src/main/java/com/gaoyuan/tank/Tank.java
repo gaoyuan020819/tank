@@ -1,12 +1,13 @@
 package com.gaoyuan.tank;
 
 import java.awt.*;
+import java.util.Random;
 
 public class Tank {
-    private static final int SPEED = 5;
+    private static final int SPEED = 10;
 
-    public static int WIDTH = ResourceMgr.tankL.getWidth();
-    public static int HEIGHT = ResourceMgr.tankL.getWidth();
+    public static int WIDTH = ResourceMgr.badTankU.getWidth();
+    public static int HEIGHT = ResourceMgr.badTankU.getWidth();
 
     public int x, y;
     private Dir dir = Dir.LEFT;
@@ -18,15 +19,22 @@ public class Tank {
 
     private boolean living = true;
 
+    private Random random = new Random();
+
+    public Rectangle rect = new Rectangle();
 
 
-    public Tank(int x, int y, Dir dir,Group group, TankFrame tf) {
+    public Tank(int x, int y, Dir dir, Group group, TankFrame tf) {
         this.x = x;
         this.y = y;
         this.dir = dir;
         this.group = group;
         this.tf = tf;
 
+        rect.x = this.x;
+        rect.y = this.y;
+        rect.width = Tank.WIDTH;
+        rect.height = Tank.HEIGHT;
     }
 
     public void piant(Graphics g) {
@@ -35,22 +43,22 @@ public class Tank {
 //        g.fillRect(x, y, 50, 50);
 //        g.setColor(c);
 
-        if (!this.living){
-            return;
+        if (!this.living) {
+            tf.tanks.remove(this);
         }
 
         switch (this.dir) {
             case LEFT:
-                g.drawImage(ResourceMgr.tankL, x, y, null);
+                g.drawImage(this.group == Group.BAD ? ResourceMgr.badTankL : ResourceMgr.goodTankL, x, y, null);
                 break;
             case RIGHT:
-                g.drawImage(ResourceMgr.tankR, x, y, null);
+                g.drawImage(this.group == Group.BAD ? ResourceMgr.badTankR : ResourceMgr.goodTankR, x, y, null);
                 break;
             case UP:
-                g.drawImage(ResourceMgr.tankU, x, y, null);
+                g.drawImage(this.group == Group.BAD ? ResourceMgr.badTankU : ResourceMgr.goodTankU, x, y, null);
                 break;
             case DOWN:
-                g.drawImage(ResourceMgr.tankD, x, y, null);
+                g.drawImage(this.group == Group.BAD ? ResourceMgr.badTankD : ResourceMgr.goodTankD, x, y, null);
                 break;
             default:
                 break;
@@ -72,16 +80,35 @@ public class Tank {
         y += dir == Dir.DOWN ? SPEED : 0;
         y -= dir == Dir.UP ? SPEED : 0;
 
+        if (this.group == Group.BAD) {
+            if (random.nextInt(100) > 95) {
+                this.fire();
+            }
+
+            if (random.nextInt(100) > 95) {
+                randomDir();
+            }
+        }
+
+        boundsCheck();
+
+        rect.x = this.x;
+        rect.y = this.y;
+
     }
 
-    public void die(){
+    public void randomDir() {
+        this.dir = dir.values()[random.nextInt(4)];
+    }
+
+    public void die() {
         this.living = false;
     }
 
     public void fire() {
-        int bx = this.x + Tank.WIDTH/2 - Bullet.WIDTH/2;
-        int by = this.y + Tank.HEIGHT/2 - Bullet.HEIGHT/2;
-        tf.bullets.add(new Bullet(bx, by, this.dir,this.group, this.tf));
+        int bx = this.x + Tank.WIDTH / 2 - Bullet.WIDTH / 2;
+        int by = this.y + Tank.HEIGHT / 2 - Bullet.HEIGHT / 2;
+        tf.bullets.add(new Bullet(bx, by, this.dir, this.group, this.tf));
     }
 
     public Dir getDir() {
@@ -98,5 +125,17 @@ public class Tank {
 
     public void setMoving(boolean moving) {
         this.moving = moving;
+    }
+
+    /**
+     * 坦克边界检测
+     */
+    private void boundsCheck() {
+
+        this.x = this.x<2?2:this.x;
+        this.x = this.x>TankFrame.GAME_WIDTH-Tank.WIDTH-2?TankFrame.GAME_WIDTH-Tank.WIDTH-2:this.x;
+        this.y = this.y<28?28:this.y;
+        this.y = this.y>TankFrame.GAME_HEIGHT-Tank.HEIGHT-2?TankFrame.GAME_HEIGHT-Tank.HEIGHT-2:this.y;
+
     }
 }
