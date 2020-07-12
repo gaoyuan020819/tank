@@ -26,6 +26,7 @@ public class ResourceMgr {
      */
     public static BufferedImage[] boom = new BufferedImage[16];
 
+
     static {
         try {
 //            tankL = ImageIO.read(ResourceMgr.class.getClassLoader().getResourceAsStream("images/tankL.gif"));
@@ -38,29 +39,32 @@ public class ResourceMgr {
 //            bulletD = ImageIO.read(ResourceMgr.class.getClassLoader().getResourceAsStream("images/bulletD.gif"));
 
             badTankU = ImageIO.read(ResourceMgr.class.getClassLoader().getResourceAsStream("images/BadTank1.png"));
-            badTankD = ImageUtil.rotateImage(badTankU,180);
-            badTankR = ImageUtil.rotateImage(badTankU,90);
-            badTankL = ImageUtil.rotateImage(badTankU,-90);
+            badTankD = ImageUtil.rotateImage(badTankU, 180);
+            badTankR = ImageUtil.rotateImage(badTankU, 90);
+            badTankL = ImageUtil.rotateImage(badTankU, -90);
 
             goodTankU = ImageIO.read(ResourceMgr.class.getClassLoader().getResourceAsStream("images/GoodTank1.png"));
-            goodTankD = ImageUtil.rotateImage(goodTankU,180);
-            goodTankR = ImageUtil.rotateImage(goodTankU,90);
-            goodTankL = ImageUtil.rotateImage(goodTankU,-90);
+            goodTankD = ImageUtil.rotateImage(goodTankU, 180);
+            goodTankR = ImageUtil.rotateImage(goodTankU, 90);
+            goodTankL = ImageUtil.rotateImage(goodTankU, -90);
 
             bulletU = ImageIO.read(ResourceMgr.class.getClassLoader().getResourceAsStream("images/bulletU.png"));
-            bulletD = ImageUtil.rotateImage(bulletU,180);
-            bulletR = ImageUtil.rotateImage(bulletU,90);
-            bulletL = ImageUtil.rotateImage(bulletU,-90);
+            bulletD = ImageUtil.rotateImage(bulletU, 180);
+            bulletR = ImageUtil.rotateImage(bulletU, 90);
+            bulletL = ImageUtil.rotateImage(bulletU, -90);
 
 
             for (int i = 0; i < 16; i++) {
-               // String fileName = "images/" + i + ".gif";
-                boom[i] = ImageIO.read(ResourceMgr.class.getClassLoader().getResourceAsStream("images/e" + (i+1) + ".gif"));
+                // String fileName = "images/" + i + ".gif";
+                boom[i] = ImageIO.read(ResourceMgr.class.getClassLoader().getResourceAsStream("images/e" + (i + 1) + ".gif"));
             }
 
         } catch (IOException e) {
             e.printStackTrace();
         }
 
+    }
+
+    private ResourceMgr() {
     }
 }
