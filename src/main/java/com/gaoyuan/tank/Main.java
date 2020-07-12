@@ -12,7 +12,7 @@ public class Main {
 
         Integer initTankCount = PropertiesMgr.getInt("initTankCount");
         for(int i = 0;i<initTankCount;i++){
-            tf.tanks.add(new Tank(100+i*Tank.WIDTH,100,Dir.values()[new Random().nextInt(4)],Group.BAD,tf));
+            tf.gameModel.tanks.add(new Tank(100+i*Tank.WIDTH,100,Dir.values()[new Random().nextInt(4)],Group.BAD,tf.gameModel));
         }
 
 

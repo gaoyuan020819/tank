@@ -23,13 +23,15 @@ public class Tank {
 
     public Rectangle rect = new Rectangle();
 
+    GameModel gm;
 
-    public Tank(int x, int y, Dir dir, Group group, TankFrame tf) {
+
+    public Tank(int x, int y, Dir dir, Group group, GameModel gm) {
         this.x = x;
         this.y = y;
         this.dir = dir;
         this.group = group;
-        this.tf = tf;
+        this.gm = gm;
 
         rect.x = this.x;
         rect.y = this.y;
@@ -44,7 +46,7 @@ public class Tank {
 //        g.setColor(c);
 
         if (!this.living) {
-            tf.tanks.remove(this);
+            gm.tanks.remove(this);
         }
 
         switch (this.dir) {
@@ -108,7 +110,7 @@ public class Tank {
     public void fire() {
         int bx = this.x + Tank.WIDTH / 2 - Bullet.WIDTH / 2;
         int by = this.y + Tank.HEIGHT / 2 - Bullet.HEIGHT / 2;
-        tf.bullets.add(new Bullet(bx, by, this.dir, this.group, this.tf));
+        gm.bullets.add(new Bullet(bx, by, this.dir, this.group, this.gm));
     }
 
     public Dir getDir() {
